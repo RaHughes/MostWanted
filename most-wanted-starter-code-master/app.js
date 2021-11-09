@@ -13,9 +13,15 @@ function app(people){
   switch(searchType){
     case 'yes':
       searchResults = searchByName(people);
+      if(searchResults.length === 0){
+        alert("Could not find that individual.");
+        return app(people); // restart
+      }
+        mainMenu(searchResults, people);
       break;
     case 'no':
       // TODO: search by traits
+      attributeMenu(people);
       break;
       default:
     app(people); // restart app
@@ -23,7 +29,7 @@ function app(people){
   }
   
   // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
-  mainMenu(searchResults, people);
+  // mainMenu(searchResults, people);
 }
 
 // Menu function to call once you find who you are looking for
@@ -31,10 +37,10 @@ function mainMenu(person, people){
 
   /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
 
-  if(!person){
-    alert("Could not find that individual.");
-    return app(people); // restart
-  }
+  // if(!person){
+  //   alert("Could not find that individual.");
+  //   return app(people); // restart
+  // }
 
   let displayOption = promptFor("Found " + person[0].firstName + " " + person[0].lastName + " . Do you want to know their 'info', 'family', or 'parents'? Type the option you want or 'restart' or 'quit'", autoValid);
 
@@ -47,7 +53,8 @@ function mainMenu(person, people){
            Date of Birth: ${person[0].dob} \n
            Height: ${person[0].height} \n
            Weight: ${person[0].weight} \n
-           Eye Color: ${person[0].eyeColor} `)
+           Eye Color: ${person[0].eyeColor} 
+           Occupation: ${person[0].occupation}`)
     break;
     case "family":
     // TODO: get persons family
@@ -77,6 +84,43 @@ function mainMenu(person, people){
   }
 }
 
+function attributeMenu(people){
+  let displayOption = promptFor("What attribute would you like to search for?: 'Gender', 'Date of Birth', 'Height', 'Weight', 'Eye Color' ", autoValid).toLowerCase()
+
+  switch (displayOption){
+    case "gender":
+    var genderInput = prompt("Which gender are you lookin for? Male or Female?: ").toLowerCase()
+    var genderList = searchByAttribute(people, genderInput, "gender");
+    console.log(genderList)
+    break;
+    case "date of birth":
+      //spot for dob logic
+    var dobInput = prompt("Input the Date of Birth mm/dd/yyyy: ")
+    var dobList = searchByAttribute(people, dobInput, "dob");
+    console.log(dobList)
+    break;
+    case "height":
+      //spot for height
+    var heightInput = parseInt(prompt("How tall is who you are looking for in inches : "))
+    var heightList = searchByAttribute(people, heightInput, "height");
+    console.log(heightList)
+    break;
+    case "weight":
+      //spot for weight logic
+    var weightInput = parseInt(prompt("How heavy is the person you are looking for in pounds?: "))
+    var weightList = searchByAttribute(people, weightInput, "weight");
+    console.log(weightList)
+    break;
+    case "eye color":
+      //spot for eye color logic
+    var eyeColorInput = prompt("Which eye color are you lookin for? Blue, Brown, Black, Green, Hazel?: ").toLowerCase()
+    var eyeColorList = searchByAttribute(people, eyeColorInput, "eyeColor");
+    console.log(eyeColorList)
+    break;
+    default:
+      return attributeMenu(people);
+  }
+}
 //#endregion
 
 //Filter functions.
@@ -102,9 +146,16 @@ function searchByName(people){
 }
 
 //unfinished function to search through an array of people to find matching eye colors. Use searchByName as reference.
-function searchByEyeColor(people){
-
+function searchByAttribute(people, attribute, searchAttribute){
+  let attributeList = [];
+  people.forEach(person =>{
+    if (person[searchAttribute] === attribute){
+      attributeList.push(person)
+    }
+  })
+  return attributeList
 }
+
 
 function searchForSpouse(people, spouse){
   var foundSpouse = '';
@@ -129,12 +180,6 @@ function searchForParents(people, parents) {
   return foundParents
 }
 
-// let parentsArr = []
-// parents.forEach(i => {
-//   parentName = i.firstName + ' ' + i.lastName
-//   parentsArr.push(parentName)
-// })
-// return parentsArr
 
 //TODO: add other trait filter functions here.
 
