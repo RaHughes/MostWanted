@@ -41,7 +41,7 @@ function mainMenu(person, people){
   switch(displayOption){
     case "info":
     // TODO: get person's info
-    alert(`           First Name: ${person[0].firstName}  \n 
+    alert(`          First Name: ${person[0].firstName}  \n 
            Last Name: ${person[0].lastName} \n
            Gender: ${person[0].gender} \n 
            Date of Birth: ${person[0].dob} \n
