@@ -41,9 +41,16 @@ function mainMenu(person, people){
   switch(displayOption){
     case "info":
     // TODO: get person's info
+    alert(`           First Name: ${person[0].firstName}  \n 
+           Last Name: ${person[0].lastName} \n
+           Gender: ${person[0].gender} \n 
+           Date of Birth: ${person[0].dob} \n
+           Height: ${person[0].height} \n
+           Weight: ${person[0].weight} \n
+           Eye Color: ${person[0].eyeColor} `)
     break;
     case "family":
-    // TODO: get person's family
+    // TODO: get persons family
     var spouse = searchForSpouse(people, person[0].currentSpouse)
     alert(` ${person[0].firstName}s spouse is ${spouse.firstName} ${spouse.lastName} `)
     break;
