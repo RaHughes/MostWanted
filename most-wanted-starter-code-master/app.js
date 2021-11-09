@@ -20,8 +20,13 @@ function app(people){
         mainMenu(searchResults, people);
       break;
     case 'no':
-      // TODO: search by traits
-      attributeMenu(people);
+      var attSwitch = prompt('Would you like to search for one, or many attributes?: One, Many').toLowerCase()
+      if(attSwitch === 'one'){
+        attributeMenu(people);
+      }
+      else if(attSwitch === 'many'){
+        multipleAttributesMenu(people);
+      }
       break;
       default:
     app(people); // restart app
@@ -121,6 +126,26 @@ function attributeMenu(people){
       return attributeMenu(people);
   }
 }
+
+function multipleAttributesMenu(people){
+  let allAtts = []
+  let flag = false
+  while(flag === false){
+    let displayOption = prompt("Which attribute would you like to search by? 'Gender', 'Date of Birth', 'Height', 'Weight', 'Eye Color' ").toLowerCase()
+    if (displayOption === 'date of birth') {
+      displayOption = 'dob'
+    }
+    else if(displayOption === 'eye color') {
+      displayOption = 'eyeColor'
+    }
+    allAtts.push(displayOption)
+    let done = prompt('Would you like to add another attribute?: Yes or No').toLowerCase()
+    if(done === 'no') {
+      flag = true
+    }
+  }
+  searchAllAttributes(people, allAtts)
+}
 //#endregion
 
 //Filter functions.
@@ -154,6 +179,27 @@ function searchByAttribute(people, attribute, searchAttribute){
     }
   })
   return attributeList
+}
+
+function searchAllAttributes(people, attList) {
+  let inputList = []
+  let counter = 0
+  attList.forEach(attribute => {
+    let input = prompt(`Please input data for ${attribute}: `)
+    inputList.push(input)
+  })
+  let filteredPeople = []
+  while(counter < inputList.length) {
+    people.forEach(person => {
+      if(person[attList[counter]] === inputList[counter]) {
+        if(!(person in filteredPeople)) {
+          filteredPeople.push(person)
+        }
+      }
+    })
+    counter++
+  }
+  console.log(filteredPeople)
 }
 
 
