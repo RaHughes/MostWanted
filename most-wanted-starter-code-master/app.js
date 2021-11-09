@@ -36,7 +36,7 @@ function mainMenu(person, people){
     return app(people); // restart
   }
 
-  let displayOption = promptFor("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", autoValid);
+  let displayOption = promptFor("Found " + person[0].firstName + " " + person[0].lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", autoValid);
 
   switch(displayOption){
     case "info":
@@ -44,6 +44,8 @@ function mainMenu(person, people){
     break;
     case "family":
     // TODO: get person's family
+    var spouse = searchForSpouse(people, person[0].currentSpouse)
+    alert(` ${person[0].firstName}s spouse is ${spouse.firstName} ${spouse.lastName} `)
     break;
     case "descendants":
     // TODO: get person's descendants
@@ -85,6 +87,17 @@ function searchByName(people){
 //unfinished function to search through an array of people to find matching eye colors. Use searchByName as reference.
 function searchByEyeColor(people){
 
+}
+
+function searchForSpouse(people, spouse){
+  console.log(spouse)
+  var foundSpouse = '';
+  people.forEach(i => {
+    if (i.id === spouse) {
+      foundSpouse = i
+    }
+  })
+  return foundSpouse
 }
 
 //TODO: add other trait filter functions here.
