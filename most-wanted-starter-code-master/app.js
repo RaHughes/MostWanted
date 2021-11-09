@@ -36,7 +36,7 @@ function mainMenu(person, people){
     return app(people); // restart
   }
 
-  let displayOption = promptFor("Found " + person[0].firstName + " " + person[0].lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'", autoValid);
+  let displayOption = promptFor("Found " + person[0].firstName + " " + person[0].lastName + " . Do you want to know their 'info', 'family', or 'parents'? Type the option you want or 'restart' or 'quit'", autoValid);
 
   switch(displayOption){
     case "info":
@@ -54,8 +54,18 @@ function mainMenu(person, people){
     var spouse = searchForSpouse(people, person[0].currentSpouse)
     alert(` ${person[0].firstName}s spouse is ${spouse.firstName} ${spouse.lastName} `)
     break;
-    case "descendants":
-    // TODO: get person's descendants
+    case "parents":
+    var parents = searchForParents(people, person[0].parents)
+    if(parents.length > 1){
+      alert(`Parents \n
+            ${parents[0]} \n 
+            ${parents[1]}`)
+    } else if(parents.length === 1) {
+      alert(`Parents \n
+            ${parents[0]}`)
+    } else {
+      alert('No parents on file.')
+    }
     break;
     case "restart":
     app(people); // restart
@@ -97,7 +107,6 @@ function searchByEyeColor(people){
 }
 
 function searchForSpouse(people, spouse){
-  console.log(spouse)
   var foundSpouse = '';
   people.forEach(i => {
     if (i.id === spouse) {
@@ -106,6 +115,26 @@ function searchForSpouse(people, spouse){
   })
   return foundSpouse
 }
+
+function searchForParents(people, parents) {
+  let foundParents = []
+  parents.forEach(i => {
+    people.forEach(j => {
+      if(i === j.id) {
+        var parentName = j.firstName + ' ' + j.lastName
+        foundParents.push(parentName)
+      }
+    })
+  })
+  return foundParents
+}
+
+// let parentsArr = []
+// parents.forEach(i => {
+//   parentName = i.firstName + ' ' + i.lastName
+//   parentsArr.push(parentName)
+// })
+// return parentsArr
 
 //TODO: add other trait filter functions here.
 
