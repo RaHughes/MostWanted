@@ -47,7 +47,7 @@ function mainMenu(person, people){
   //   return app(people); // restart
   // }
 
-  let displayOption = promptFor("Found " + person[0].firstName + " " + person[0].lastName + " . Do you want to know their 'info', 'family', or 'parents'? Type the option you want or 'restart' or 'quit'", autoValid);
+  let displayOption = promptFor("Found " + person[0].firstName + " " + person[0].lastName + " . Do you want to know their 'info', 'family', 'parents', or 'descendants'? Type the option you want or 'restart' or 'quit'", autoValid);
 
   switch(displayOption){
     case "info":
@@ -58,13 +58,15 @@ function mainMenu(person, people){
            Date of Birth: ${person[0].dob} \n
            Height: ${person[0].height} \n
            Weight: ${person[0].weight} \n
-           Eye Color: ${person[0].eyeColor} 
+           Eye Color: ${person[0].eyeColor} \n
            Occupation: ${person[0].occupation}`)
     break;
     case "family":
     // TODO: get persons family
     var spouse = searchForSpouse(people, person[0].currentSpouse)
-    alert(` ${person[0].firstName}s spouse is ${spouse.firstName} ${spouse.lastName} `)
+    var descendants = searchForDescendants(people, person[0].id)
+    var parents = searchForParents(people, person[0].parents)
+    alert(`${person[0].firstName}s Family:\nSpouse:\n${spouse}\nChildren:\n${descendants.join("\n")}\nParents:\n${parents.join("\n")}`)
     break;
     case "parents":
     var parents = searchForParents(people, person[0].parents)
@@ -77,6 +79,14 @@ function mainMenu(person, people){
             ${parents[0]}`)
     } else {
       alert('No parents on file.')
+    }
+    break;
+    case "descendants":
+    var descendants = searchForDescendants(people, person[0].id)
+    if(descendants.length != 0) {
+      alert(`${person[0].firstName}s Descendants: \n${descendants.join("\n")}`)
+    } else {
+      alert("No descendants")
     }
     break;
     case "restart":
@@ -96,31 +106,52 @@ function attributeMenu(people){
     case "gender":
     var genderInput = prompt("Which gender are you lookin for? Male or Female?: ").toLowerCase()
     var genderList = searchByAttribute(people, genderInput, "gender");
-    console.log(genderList)
+    var genderNames = []
+    genderList.forEach(i => {
+      var name = i.firstName + ' ' + i.lastName
+      genderNames.push(name)
+    })
+    alert(genderNames.join("\n"))
     break;
     case "date of birth":
-      //spot for dob logic
     var dobInput = prompt("Input the Date of Birth mm/dd/yyyy: ")
     var dobList = searchByAttribute(people, dobInput, "dob");
-    console.log(dobList)
+    var dobNames = []
+    dobList.forEach(i => {
+      var name = i.firstName + ' ' + i.lastName
+      dobNames.push(name)
+    })
+    alert(dobNames.join("\n"))
     break;
     case "height":
-      //spot for height
     var heightInput = parseInt(prompt("How tall is who you are looking for in inches : "))
     var heightList = searchByAttribute(people, heightInput, "height");
-    console.log(heightList)
+    var heightNames = []
+    heightList.forEach(i => {
+      var name = i.firstName + ' ' + i.lastName
+      heightNames.push(name)
+    })
+    alert(heightNames.join("\n"))
     break;
     case "weight":
-      //spot for weight logic
     var weightInput = parseInt(prompt("How heavy is the person you are looking for in pounds?: "))
     var weightList = searchByAttribute(people, weightInput, "weight");
-    console.log(weightList)
+    var weightNames = []
+    weightList.forEach(i => {
+      var name = i.firstName + ' ' + i.lastName
+      weightNames.push(name)
+    })
+    alert(weightNames.join("\n"))
     break;
     case "eye color":
-      //spot for eye color logic
     var eyeColorInput = prompt("Which eye color are you lookin for? Blue, Brown, Black, Green, Hazel?: ").toLowerCase()
     var eyeColorList = searchByAttribute(people, eyeColorInput, "eyeColor");
-    console.log(eyeColorList)
+    var eyeColorNames = []
+    eyeColorList.forEach(i => {
+      var name = i.firstName + ' ' + i.lastName
+      eyeColorNames.push(name)
+    })
+    alert(eyeColorNames.join("\n"))
     break;
     default:
       return attributeMenu(people);
@@ -144,9 +175,13 @@ function multipleAttributesMenu(people){
       flag = true
     }
   }
-  let filteredlist = searchAllAttributes(people, allAtts)
-  console.log(filteredlist)
-
+  let filteredList = searchAllAttributes(people, allAtts)
+  var filteredNames = []
+    filteredList.forEach(i => {
+      var name = i.firstName + ' ' + i.lastName
+      filteredNames.push(name)
+    })
+    alert(filteredNames.join("\n"))
 }
 //#endregion
 
@@ -157,11 +192,11 @@ function multipleAttributesMenu(people){
 
 //nearly finished function used to search through an array of people to find matching first and last name and return a SINGLE person object.
 function searchByName(people){
-  let firstName = promptFor("What is the person's first name?", autoValid);
-  let lastName = promptFor("What is the person's last name?", autoValid);
+  let firstName = promptFor("What is the person's first name?", autoValid).toLowerCase();
+  let lastName = promptFor("What is the person's last name?", autoValid).toLowerCase();
 
   let foundPerson = people.filter(function(potentialMatch){
-    if(potentialMatch.firstName === firstName && potentialMatch.lastName === lastName){
+    if(potentialMatch.firstName.toLowerCase() === firstName && potentialMatch.lastName.toLowerCase() === lastName){
       return true;
     }
     else{
@@ -211,7 +246,7 @@ function searchForSpouse(people, spouse){
   var foundSpouse = '';
   people.forEach(i => {
     if (i.id === spouse) {
-      foundSpouse = i
+      foundSpouse = i.firstName + ' ' + i.lastName
     }
   })
   return foundSpouse
@@ -230,10 +265,18 @@ function searchForParents(people, parents) {
   return foundParents
 }
 
-
-//TODO: add other trait filter functions here.
-
-
+function searchForDescendants(people, parentId) {
+  let children = []
+  people.forEach(person => {
+    person.parents.forEach(id => {
+      if(id === parentId) {
+        var personName = person.firstName + ' ' + person.lastName
+        children.push(personName)
+      }
+    })
+  })
+  return children
+}
 
 //#endregion
 
