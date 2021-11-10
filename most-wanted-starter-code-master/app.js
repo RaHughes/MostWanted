@@ -144,7 +144,9 @@ function multipleAttributesMenu(people){
       flag = true
     }
   }
-  searchAllAttributes(people, allAtts)
+  let filteredlist = searchAllAttributes(people, allAtts)
+  console.log(filteredlist)
+
 }
 //#endregion
 
@@ -189,7 +191,6 @@ function searchAllAttributes(people, attList) {
     inputList.push(input)
   })
   let filteredPeople = []
-  while(counter < inputList.length) {
     people.forEach(person => {
       if(person[attList[counter]] === inputList[counter]) {
         if(!(person in filteredPeople)) {
@@ -198,8 +199,11 @@ function searchAllAttributes(people, attList) {
       }
     })
     counter++
-  }
-  console.log(filteredPeople)
+    while(counter < (inputList.length)) {
+      filteredPeople = filteredPeople.filter(person => person[attList[counter]] === inputList[counter])
+      counter++
+    }
+  return filteredPeople
 }
 
 
