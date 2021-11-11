@@ -137,9 +137,11 @@ function attributeMenu(people){
 
 function multipleAttributesMenu(people){
   let allAtts = []
+  let allAttsNames = []
   let flag = false
   while(flag === false){
     let displayOption = prompt("Which attribute would you like to search by? 'Gender', 'Date of Birth', 'Height', 'Weight', 'Eye Color' ").toLowerCase()
+    allAttsNames.push(displayOption)
     if (displayOption === 'date of birth') {
       displayOption = 'dob'
     }
@@ -152,7 +154,7 @@ function multipleAttributesMenu(people){
       flag = true
     }
   }
-  let filteredList = searchAllAttributes(people, allAtts)
+  let filteredList = searchAllAttributes(people, allAtts, allAttsNames)
   var filteredNames = []
     filteredList.forEach(i => {
       var name = i.firstName + ' ' + i.lastName
@@ -186,10 +188,10 @@ function searchByAttribute(people, attribute, searchAttribute){
   return attributeList
 }
 
-function searchAllAttributes(people, attList) {
+function searchAllAttributes(people, attList, attNames) {
   let inputList = []
   let counter = 0
-  attList.forEach(attribute => {
+  attNames.forEach(attribute => {
     let input = prompt(`Please input data for ${attribute}: `)
     inputList.push(input)
   })
